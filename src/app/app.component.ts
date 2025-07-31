@@ -1,12 +1,21 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { CommonModule } from '@angular/common'; // Nécessaire pour les directives comme ngIf, ngFor
+import { RouterModule } from '@angular/router'; // Nécessaire pour <router-outlet> et les directives de routage
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  standalone: true, // IMPORTANT : Marque ce composant comme autonome
+  imports: [
+    CommonModule, // Permet d'utiliser les directives Angular de base
+    RouterModule, // Permet d'utiliser <router-outlet> et les fonctionnalités de routage
+  ],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  title = 'my-projects';
+  title = "Gestion des Rapports d'Activités";
+
+  getCurrentYear(): number {
+    return new Date().getFullYear();
+  }
 }
