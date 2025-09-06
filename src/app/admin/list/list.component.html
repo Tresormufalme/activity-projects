@@ -1,0 +1,87 @@
+<div class="p-8">
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-3xl font-bold text-gray-800">Liste des Motards</h2>
+    <button
+      class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-md transition-colors"
+      [routerLink]="['/admin/add']"
+    >
+      Ajouter un Motard
+    </button>
+  </div>
+
+  <div class="mb-6 flex space-x-4 items-center">
+    <input
+      type="text"
+      [(ngModel)]="searchTerm"
+      (ngModelChange)="applyFiltersAndSort()"
+      placeholder="Rechercher par nom, prénom ou plaque..."
+      class="w-full px-4 py-2 rounded-md border focus:outline-none focus:ring focus:ring-blue-200"
+    />
+  </div>
+
+  <div class="bg-white p-6 rounded-lg shadow-md overflow-x-auto">
+    <table class="w-full text-left">
+      <thead>
+        <tr class="bg-gray-100 border-b">
+          <th
+            class="p-4 text-sm font-semibold text-gray-600 cursor-pointer"
+            (click)="onSort('personnel.nom')"
+          >
+            Nom / Prénom
+          </th>
+          <th
+            class="p-4 text-sm font-semibold text-gray-600 cursor-pointer"
+            (click)="onSort('moto.plaque')"
+          >
+            Plaque
+          </th>
+          <th class="p-4 text-sm font-semibold text-gray-600">
+            Catégorie Permis
+          </th>
+          <th class="p-4 text-sm font-semibold text-gray-600 text-right">
+            Actions
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let motard of filteredMotards"
+          class="border-b hover:bg-gray-50 transition-colors"
+        >
+          <td class="p-4 text-gray-800">
+            {{ motard.personnel.nom }} {{ motard.personnel.prenom }}
+          </td>
+          <td class="p-4 text-gray-800">{{ motard.moto.plaque }}</td>
+          <td class="p-4 text-gray-800">
+            {{ motard.administratif.categoriePermis }}
+          </td>
+          <td class="p-4 text-right space-x-2">
+            <button
+              class="text-blue-600 hover:text-blue-800 font-medium"
+              [routerLink]="['/admin/edit', motard.id]"
+            >
+              Modifier
+            </button>
+            <button
+              class="text-red-600 hover:text-red-800 font-medium"
+              (click)="onDelete(motard.id)"
+            >
+              Supprimer
+            </button>
+            <button
+              class="text-gray-600 hover:text-gray-800 font-medium"
+              [routerLink]="['/admin/details', motard.id]"
+            >
+              Détails
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="filteredMotards.length === 0">
+          <td colspan="4" class="p-4 text-center text-gray-500">
+            Aucun enregistrement trouvé.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

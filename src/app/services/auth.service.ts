@@ -126,3 +126,81 @@ export class AuthService {
     }
   }
 }
+// import { Injectable, inject } from '@angular/core';
+// import {
+//   Auth,
+//   createUserWithEmailAndPassword,
+//   signInWithEmailAndPassword,
+//   signOut,
+//   User,
+// } from '@angular/fire/auth';
+// import { Firestore, doc, getDoc, setDoc } from '@angular/fire/firestore';
+// import { from, Observable, of, switchMap } from 'rxjs';
+
+// @Injectable({
+//   providedIn: 'root',
+// })
+// export class AuthService {
+//   private auth: Auth = inject(Auth);
+//   private firestore: Firestore = inject(Firestore);
+//   public currentUser: User | null = null;
+//   public userRole: string | null = null;
+
+//   constructor() {
+//     // Écoute les changements d'état de l'authentification
+//     this.auth.onAuthStateChanged((user) => {
+//       this.currentUser = user;
+//       if (user) {
+//         // Si un utilisateur est connecté, récupère son rôle
+//         this.getUserRole(user.uid).subscribe((role) => {
+//           this.userRole = role;
+//         });
+//       } else {
+//         this.userRole = null;
+//       }
+//     });
+//   }
+
+//   // Connexion de l'utilisateur
+//   signIn(email: string, password: string): Observable<any> {
+//     return from(signInWithEmailAndPassword(this.auth, email, password));
+//   }
+
+//   // Inscription d'un nouvel utilisateur
+//   signUp(
+//     email: string,
+//     password: string,
+//     role: 'admin' | 'visitor'
+//   ): Observable<any> {
+//     return from(
+//       createUserWithEmailAndPassword(this.auth, email, password)
+//     ).pipe(
+//       // Une fois l'utilisateur créé, ajoute son rôle dans Firestore
+//       switchMap((userCredential) => {
+//         const userId = userCredential.user.uid;
+//         const userDocRef = doc(this.firestore, `users/${userId}`);
+//         return from(setDoc(userDocRef, { email, role }));
+//       })
+//     );
+//   }
+
+//   // Déconnexion de l'utilisateur
+//   signOut(): Observable<any> {
+//     return from(signOut(this.auth));
+//   }
+
+//   // Récupère le rôle de l'utilisateur depuis Firestore
+//   getUserRole(uid: string): Observable<string | null> {
+//     const userDocRef = doc(this.firestore, `users/${uid}`);
+//     return from(getDoc(userDocRef)).pipe(
+//       switchMap((snapshot) => {
+//         if (snapshot.exists()) {
+//           const userData = snapshot.data() as { role: string };
+//           return of(userData.role);
+//         } else {
+//           return of(null);
+//         }
+//       })
+//     );
+//   }
+// }

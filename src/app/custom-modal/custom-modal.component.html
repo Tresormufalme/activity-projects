@@ -1,99 +1,102 @@
 <!-- src/app/components/custom-modal/custom-modal.component.html -->
 
 <!-- Conteneur principal de la modale :
-     - Fixed inset-0: Prend toute la largeur et hauteur de l'écran.
-     - bg-gray-600 bg-opacity-50: Fond semi-transparent gris.
-     - flex items-center justify-center: Centre le contenu de la modale.
-     - z-50: Assure que la modale est au-dessus des autres éléments.
-     - p-4: Ajoute un padding pour les petits écrans.
-     - (click)="onClose()": Ferme la modale si l'utilisateur clique en dehors du contenu.
+- Fixed inset-0: Prend toute la largeur et hauteur de l'écran.
+- bg-gray-600 bg-opacity-50: Fond semi-transparent gris.
+- flex items-center justify-center: Centre le contenu de la modale.
+- z-50: Assure que la modale est au-dessus des autres éléments.
+- p-4: Ajoute un padding pour les petits écrans.
+- (click)="onClose()": Ferme la modale si l'utilisateur clique en dehors du contenu.
 -->
 <div
   class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 p-4"
   (click)="onClose()"
->
+  >
   <!-- Contenu de la modale :
-       - bg-white rounded-lg shadow-xl: Style de la boîte de dialogue.
-       - max-w-sm w-full: Limite la largeur sur les grands écrans, prend toute la largeur sur les petits.
-       - overflow-hidden: Cache le contenu qui dépasse (utile pour les coins arrondis).
-       - (click)="$event.stopPropagation()": Empêche la fermeture de la modale si l'utilisateur clique sur le contenu.
+  - bg-white rounded-lg shadow-xl: Style de la boîte de dialogue.
+  - max-w-sm w-full: Limite la largeur sur les grands écrans, prend toute la largeur sur les petits.
+  - overflow-hidden: Cache le contenu qui dépasse (utile pour les coins arrondis).
+  - (click)="$event.stopPropagation()": Empêche la fermeture de la modale si l'utilisateur clique sur le contenu.
   -->
   <div
     class="bg-white rounded-lg shadow-xl max-w-sm w-full overflow-hidden"
     (click)="$event.stopPropagation()"
-  >
+    >
     <!-- Header de la modale :
-         - [ngClass]="headerClass": Applique la couleur de fond dynamique basée sur le type de modale.
-         - px-6 py-4: Padding interne.
-         - flex justify-between items-center: Aligne le titre et le bouton de fermeture.
-         - text-white: Couleur du texte dans l'en-tête.
+    - [ngClass]="headerClass": Applique la couleur de fond dynamique basée sur le type de modale.
+    - px-6 py-4: Padding interne.
+    - flex justify-between items-center: Aligne le titre et le bouton de fermeture.
+    - text-white: Couleur du texte dans l'en-tête.
     -->
     <div
       [ngClass]="headerClass"
       class="px-6 py-4 flex justify-between items-center text-white"
-    >
+      >
       <h3 class="text-xl font-semibold">{{ title }}</h3>
       <!-- Bouton de fermeture (icône SVG "X") -->
       <button
         (click)="onClose()"
         class="text-white hover:text-gray-200 focus:outline-none"
-      >
+        >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           class="h-6 w-6"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
-        >
+          >
           <path
             stroke-linecap="round"
             stroke-linejoin="round"
             stroke-width="2"
             d="M6 18L18 6M6 6l12 12"
-          />
-        </svg>
-      </button>
-    </div>
+            />
+          </svg>
+        </button>
+      </div>
 
-    <!-- Corps de la modale :
-         - p-6: Padding interne.
-         - text-center: Centre le texte.
-    -->
-    <div class="p-6 text-center">
-      <p class="text-gray-700 text-base mb-6">{{ message }}</p>
-    </div>
-
-    <!-- Footer de la modale (boutons d'action) :
-         - p-6 bg-gray-50: Padding et fond gris clair.
-         - flex justify-center space-x-4: Centre les boutons et ajoute de l'espace entre eux.
-    -->
-    <div class="p-6 bg-gray-50 flex justify-center space-x-4">
-      <!-- Bouton Annuler :
-           - *ngIf="showCancelButton || type === 'confirm'": Affiché si showCancelButton est vrai ou si le type est 'confirm'.
+      <!-- Corps de la modale :
+      - p-6: Padding interne.
+      - text-center: Centre le texte.
       -->
-      <button
-        *ngIf="showCancelButton || type === 'confirm'"
-        (click)="onCancel()"
-        class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-md transition duration-300 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-opacity-75"
-      >
-        {{ cancelButtonText }}
-      </button>
-      <!-- Bouton Confirmer (seulement pour type 'confirm') -->
-      <button
-        *ngIf="type === 'confirm'"
-        (click)="onConfirm()"
-        class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75"
-      >
-        {{ confirmButtonText }}
-      </button>
-      <!-- Bouton OK (pour tous les types sauf 'confirm') -->
-      <button
-        *ngIf="type !== 'confirm'"
-        (click)="onClose()"
-        class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75"
-      >
-        OK
-      </button>
+      <div class="p-6 text-center">
+        <p class="text-gray-700 text-base mb-6">{{ message }}</p>
+      </div>
+
+      <!-- Footer de la modale (boutons d'action) :
+      - p-6 bg-gray-50: Padding et fond gris clair.
+      - flex justify-center space-x-4: Centre les boutons et ajoute de l'espace entre eux.
+      -->
+      <div class="p-6 bg-gray-50 flex justify-center space-x-4">
+        <!-- Bouton Annuler :
+        - *ngIf="showCancelButton || type === 'confirm'": Affiché si showCancelButton est vrai ou si le type est 'confirm'.
+        -->
+        @if (showCancelButton || type === 'confirm') {
+          <button
+            (click)="onCancel()"
+            class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-md transition duration-300 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-opacity-75"
+            >
+            {{ cancelButtonText }}
+          </button>
+        }
+        <!-- Bouton Confirmer (seulement pour type 'confirm') -->
+        @if (type === 'confirm') {
+          <button
+            (click)="onConfirm()"
+            class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75"
+            >
+            {{ confirmButtonText }}
+          </button>
+        }
+        <!-- Bouton OK (pour tous les types sauf 'confirm') -->
+        @if (type !== 'confirm') {
+          <button
+            (click)="onClose()"
+            class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75"
+            >
+            OK
+          </button>
+        }
+      </div>
     </div>
   </div>
-</div>

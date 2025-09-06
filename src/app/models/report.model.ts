@@ -4,7 +4,7 @@ import { Timestamp } from '@angular/fire/firestore'; // Corriger l'import pour F
 
 export interface Report {
   id?: string; // Identifiant Firestore (ajouté manuellement après lecture du doc)
-  date: Date | Timestamp;
+  date: string | Date;
   // Activité
   typeActivite: string; // Nom correct dans ton modèle
   category?: string; // Utilisé dans certains exports PDF

@@ -3,28 +3,30 @@
   <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-2xl mt-8">
     <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">
       {{
-        isEditMode
-          ? "Modifier le Rapport d'Activité"
-          : "Ajouter un Nouveau Rapport d'Activité"
+      isEditMode
+      ? "Modifier le Rapport d'Activité"
+      : "Ajouter un Nouveau Rapport d'Activité"
       }}
     </h2>
 
     <form [formGroup]="reportForm" (ngSubmit)="onSubmit()" class="space-y-6">
       <!-- Messages d'erreur et de succès -->
-      <div
-        *ngIf="errorMessage"
-        class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-md relative"
-        role="alert"
-      >
-        <span class="block sm:inline">{{ errorMessage }}</span>
-      </div>
-      <div
-        *ngIf="successMessage"
-        class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-md relative"
-        role="alert"
-      >
-        <span class="block sm:inline">{{ successMessage }}</span>
-      </div>
+      @if (errorMessage) {
+        <div
+          class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-md relative"
+          role="alert"
+          >
+          <span class="block sm:inline">{{ errorMessage }}</span>
+        </div>
+      }
+      @if (successMessage) {
+        <div
+          class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-md relative"
+          role="alert"
+          >
+          <span class="block sm:inline">{{ successMessage }}</span>
+        </div>
+      }
 
       <!-- Type d'activité -->
       <div>
@@ -32,302 +34,319 @@
           for="activityType"
           class="block text-sm font-medium text-gray-700 mb-1"
           >Type d'Activité <span class="text-red-500">*</span></label
-        >
-        <select
-          id="activityType"
-          formControlName="activityType"
-          class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        >
-          <option value="" disabled>Sélectionnez un type</option>
-          <option *ngFor="let type of activityTypes" [value]="type">
-            {{ type }}
-          </option>
-        </select>
-        <div
-          *ngIf="
+          >
+          <select
+            id="activityType"
+            formControlName="activityType"
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+            <option value="" disabled>Sélectionnez un type</option>
+            @for (type of activityTypes; track type) {
+              <option [value]="type">
+                {{ type }}
+              </option>
+            }
+          </select>
+          @if (
             reportForm.get('activityType')?.invalid &&
             (reportForm.get('activityType')?.dirty ||
-              reportForm.get('activityType')?.touched)
-          "
-          class="text-red-500 text-sm mt-1"
-        >
-          L'activité est requise.
+            reportForm.get('activityType')?.touched)
+            ) {
+            <div
+              class="text-red-500 text-sm mt-1"
+              >
+              L'activité est requise.
+            </div>
+          }
         </div>
-      </div>
 
-      <!-- Date et Lieu -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <label for="date" class="block text-sm font-medium text-gray-700 mb-1"
-            >Date <span class="text-red-500">*</span></label
-          >
-          <input
-            id="date"
-            type="date"
-            formControlName="date"
-            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          />
-          <div
-            *ngIf="
-              reportForm.get('date')?.invalid &&
-              (reportForm.get('date')?.dirty || reportForm.get('date')?.touched)
-            "
-            class="text-red-500 text-sm mt-1"
-          >
-            La date est requise.
-          </div>
-        </div>
-        <div>
-          <label
-            for="location"
-            class="block text-sm font-medium text-gray-700 mb-1"
-            >Lieu <span class="text-red-500">*</span></label
-          >
-          <input
-            id="location"
-            type="text"
-            formControlName="location"
-            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            placeholder="Ex: Goma, Centre Communautaire"
-          />
-          <div
-            *ngIf="
-              reportForm.get('location')?.invalid &&
-              (reportForm.get('location')?.dirty ||
-                reportForm.get('location')?.touched)
-            "
-            class="text-red-500 text-sm mt-1"
-          >
-            Le lieu est requis.
-          </div>
-        </div>
-      </div>
+        <!-- Date et Lieu -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label for="date" class="block text-sm font-medium text-gray-700 mb-1"
+              >Date <span class="text-red-500">*</span></label
+              >
+              <input
+                id="date"
+                type="date"
+                formControlName="date"
+                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+                @if (
+                  reportForm.get('date')?.invalid &&
+                  (reportForm.get('date')?.dirty || reportForm.get('date')?.touched)
+                  ) {
+                  <div
+                    class="text-red-500 text-sm mt-1"
+                    >
+                    La date est requise.
+                  </div>
+                }
+              </div>
+              <div>
+                <label
+                  for="location"
+                  class="block text-sm font-medium text-gray-700 mb-1"
+                  >Lieu <span class="text-red-500">*</span></label
+                  >
+                  <input
+                    id="location"
+                    type="text"
+                    formControlName="location"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Ex: Goma, Centre Communautaire"
+                    />
+                    @if (
+                      reportForm.get('location')?.invalid &&
+                      (reportForm.get('location')?.dirty ||
+                      reportForm.get('location')?.touched)
+                      ) {
+                      <div
+                        class="text-red-500 text-sm mt-1"
+                        >
+                        Le lieu est requis.
+                      </div>
+                    }
+                  </div>
+                </div>
 
-      <!-- Description -->
-      <div>
-        <label
-          for="description"
-          class="block text-sm font-medium text-gray-700 mb-1"
-          >Description <span class="text-red-500">*</span></label
-        >
-        <textarea
-          id="description"
-          formControlName="description"
-          rows="4"
-          class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          placeholder="Décrivez l'activité en détail..."
-        ></textarea>
-        <div
-          *ngIf="
-            reportForm.get('description')?.invalid &&
-            (reportForm.get('description')?.dirty ||
-              reportForm.get('description')?.touched)
-          "
-          class="text-red-500 text-sm mt-1"
-        >
-          La description est requise.
-        </div>
-      </div>
+                <!-- Description -->
+                <div>
+                  <label
+                    for="description"
+                    class="block text-sm font-medium text-gray-700 mb-1"
+                    >Description <span class="text-red-500">*</span></label
+                    >
+                    <textarea
+                      id="description"
+                      formControlName="description"
+                      rows="4"
+                      class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="Décrivez l'activité en détail..."
+                    ></textarea>
+                    @if (
+                      reportForm.get('description')?.invalid &&
+                      (reportForm.get('description')?.dirty ||
+                      reportForm.get('description')?.touched)
+                      ) {
+                      <div
+                        class="text-red-500 text-sm mt-1"
+                        >
+                        La description est requise.
+                      </div>
+                    }
+                  </div>
 
-      <!-- Participants -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div>
-          <label
-            for="maleParticipants"
-            class="block text-sm font-medium text-gray-700 mb-1"
-            >Hommes</label
-          >
-          <input
-            id="maleParticipants"
-            type="number"
-            formControlName="maleParticipants"
-            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            min="0"
-          />
-          <div
-            *ngIf="
-              reportForm.get('maleParticipants')?.invalid &&
-              (reportForm.get('maleParticipants')?.dirty ||
-                reportForm.get('maleParticipants')?.touched)
-            "
-            class="text-red-500 text-sm mt-1"
-          >
-            Veuillez entrer un nombre valide (>= 0).
-          </div>
-        </div>
-        <div>
-          <label
-            for="femaleParticipants"
-            class="block text-sm font-medium text-gray-700 mb-1"
-            >Femmes</label
-          >
-          <input
-            id="femaleParticipants"
-            type="number"
-            formControlName="femaleParticipants"
-            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            min="0"
-          />
-          <div
-            *ngIf="
-              reportForm.get('femaleParticipants')?.invalid &&
-              (reportForm.get('femaleParticipants')?.dirty ||
-                reportForm.get('femaleParticipants')?.touched)
-            "
-            class="text-red-500 text-sm mt-1"
-          >
-            Veuillez entrer un nombre valide (>= 0).
-          </div>
-        </div>
-        <div>
-          <label
-            for="childrenParticipants"
-            class="block text-sm font-medium text-gray-700 mb-1"
-            >Enfants</label
-          >
-          <input
-            id="childrenParticipants"
-            type="number"
-            formControlName="childrenParticipants"
-            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            min="0"
-          />
-          <div
-            *ngIf="
-              reportForm.get('childrenParticipants')?.invalid &&
-              (reportForm.get('childrenParticipants')?.dirty ||
-                reportForm.get('childrenParticipants')?.touched)
-            "
-            class="text-red-500 text-sm mt-1"
-          >
-            Veuillez entrer un nombre valide (>= 0).
-          </div>
-        </div>
-        <div>
-          <label
-            for="youthParticipants"
-            class="block text-sm font-medium text-gray-700 mb-1"
-            >Jeunes</label
-          >
-          <input
-            id="youthParticipants"
-            type="number"
-            formControlName="youthParticipants"
-            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            min="0"
-          />
-          <div
-            *ngIf="
-              reportForm.get('youthParticipants')?.invalid &&
-              (reportForm.get('youthParticipants')?.dirty ||
-                reportForm.get('youthParticipants')?.touched)
-            "
-            class="text-red-500 text-sm mt-1"
-          >
-            Veuillez entrer un nombre valide (>= 0).
-          </div>
-        </div>
-        <div class="md:col-span-2 lg:col-span-1">
-          <label
-            for="participantsCount"
-            class="block text-sm font-medium text-gray-700 mb-1"
-            >Total Participants <span class="text-red-500">*</span></label
-          >
-          <input
-            id="participantsCount"
-            type="number"
-            formControlName="participantsCount"
-            class="w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-50 cursor-not-allowed"
-            readonly
-          />
-          <div
-            *ngIf="
-              reportForm.get('participantsCount')?.invalid &&
-              (reportForm.get('participantsCount')?.dirty ||
-                reportForm.get('participantsCount')?.touched)
-            "
-            class="text-red-500 text-sm mt-1"
-          >
-            Le nombre total de participants est requis et doit être >= 0.
-          </div>
-        </div>
-      </div>
+                  <!-- Participants -->
+                  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div>
+                      <label
+                        for="maleParticipants"
+                        class="block text-sm font-medium text-gray-700 mb-1"
+                        >Hommes</label
+                        >
+                        <input
+                          id="maleParticipants"
+                          type="number"
+                          formControlName="maleParticipants"
+                          class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          min="0"
+                          />
+                          @if (
+                            reportForm.get('maleParticipants')?.invalid &&
+                            (reportForm.get('maleParticipants')?.dirty ||
+                            reportForm.get('maleParticipants')?.touched)
+                            ) {
+                            <div
+                              class="text-red-500 text-sm mt-1"
+                              >
+                              Veuillez entrer un nombre valide (>= 0).
+                            </div>
+                          }
+                        </div>
+                        <div>
+                          <label
+                            for="femaleParticipants"
+                            class="block text-sm font-medium text-gray-700 mb-1"
+                            >Femmes</label
+                            >
+                            <input
+                              id="femaleParticipants"
+                              type="number"
+                              formControlName="femaleParticipants"
+                              class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                              min="0"
+                              />
+                              @if (
+                                reportForm.get('femaleParticipants')?.invalid &&
+                                (reportForm.get('femaleParticipants')?.dirty ||
+                                reportForm.get('femaleParticipants')?.touched)
+                                ) {
+                                <div
+                                  class="text-red-500 text-sm mt-1"
+                                  >
+                                  Veuillez entrer un nombre valide (>= 0).
+                                </div>
+                              }
+                            </div>
+                            <div>
+                              <label
+                                for="childrenParticipants"
+                                class="block text-sm font-medium text-gray-700 mb-1"
+                                >Enfants</label
+                                >
+                                <input
+                                  id="childrenParticipants"
+                                  type="number"
+                                  formControlName="childrenParticipants"
+                                  class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                  min="0"
+                                  />
+                                  @if (
+                                    reportForm.get('childrenParticipants')?.invalid &&
+                                    (reportForm.get('childrenParticipants')?.dirty ||
+                                    reportForm.get('childrenParticipants')?.touched)
+                                    ) {
+                                    <div
+                                      class="text-red-500 text-sm mt-1"
+                                      >
+                                      Veuillez entrer un nombre valide (>= 0).
+                                    </div>
+                                  }
+                                </div>
+                                <div>
+                                  <label
+                                    for="youthParticipants"
+                                    class="block text-sm font-medium text-gray-700 mb-1"
+                                    >Jeunes</label
+                                    >
+                                    <input
+                                      id="youthParticipants"
+                                      type="number"
+                                      formControlName="youthParticipants"
+                                      class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                      min="0"
+                                      />
+                                      @if (
+                                        reportForm.get('youthParticipants')?.invalid &&
+                                        (reportForm.get('youthParticipants')?.dirty ||
+                                        reportForm.get('youthParticipants')?.touched)
+                                        ) {
+                                        <div
+                                          class="text-red-500 text-sm mt-1"
+                                          >
+                                          Veuillez entrer un nombre valide (>= 0).
+                                        </div>
+                                      }
+                                    </div>
+                                    <div class="md:col-span-2 lg:col-span-1">
+                                      <label
+                                        for="participantsCount"
+                                        class="block text-sm font-medium text-gray-700 mb-1"
+                                        >Total Participants <span class="text-red-500">*</span></label
+                                        >
+                                        <input
+                                          id="participantsCount"
+                                          type="number"
+                                          formControlName="participantsCount"
+                                          class="w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-50 cursor-not-allowed"
+                                          readonly
+                                          />
+                                          @if (
+                                            reportForm.get('participantsCount')?.invalid &&
+                                            (reportForm.get('participantsCount')?.dirty ||
+                                            reportForm.get('participantsCount')?.touched)
+                                            ) {
+                                            <div
+                                              class="text-red-500 text-sm mt-1"
+                                              >
+                                              Le nombre total de participants est requis et doit être >= 0.
+                                            </div>
+                                          }
+                                        </div>
+                                      </div>
 
-      <!-- Région et Catégorie -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <label
-            for="region"
-            class="block text-sm font-medium text-gray-700 mb-1"
-            >Région <span class="text-red-500">*</span></label
-          >
-          <select
-            id="region"
-            formControlName="region"
-            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          >
-            <option value="" disabled>Sélectionnez une région</option>
-            <option *ngFor="let region of regions" [value]="region">
-              {{ region }}
-            </option>
-          </select>
-          <div
-            *ngIf="
-              reportForm.get('region')?.invalid &&
-              (reportForm.get('region')?.dirty ||
-                reportForm.get('region')?.touched)
-            "
-            class="text-red-500 text-sm mt-1"
-          >
-            La région est requise.
-          </div>
-        </div>
-        <div>
-          <label
-            for="category"
-            class="block text-sm font-medium text-gray-700 mb-1"
-            >Catégorie <span class="text-red-500">*</span></label
-          >
-          <select
-            id="category"
-            formControlName="category"
-            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          >
-            <option value="" disabled>Sélectionnez une catégorie</option>
-            <option *ngFor="let category of categories" [value]="category">
-              {{ category }}
-            </option>
-          </select>
-          <div
-            *ngIf="
-              reportForm.get('category')?.invalid &&
-              (reportForm.get('category')?.dirty ||
-                reportForm.get('category')?.touched)
-            "
-            class="text-red-500 text-sm mt-1"
-          >
-            La catégorie est requise.
-          </div>
-        </div>
-      </div>
+                                      <!-- Région et Catégorie -->
+                                      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div>
+                                          <label
+                                            for="region"
+                                            class="block text-sm font-medium text-gray-700 mb-1"
+                                            >Région <span class="text-red-500">*</span></label
+                                            >
+                                            <select
+                                              id="region"
+                                              formControlName="region"
+                                              class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                              >
+                                              <option value="" disabled>Sélectionnez une région</option>
+                                              @for (region of regions; track region) {
+                                                <option [value]="region">
+                                                  {{ region }}
+                                                </option>
+                                              }
+                                            </select>
+                                            @if (
+                                              reportForm.get('region')?.invalid &&
+                                              (reportForm.get('region')?.dirty ||
+                                              reportForm.get('region')?.touched)
+                                              ) {
+                                              <div
+                                                class="text-red-500 text-sm mt-1"
+                                                >
+                                                La région est requise.
+                                              </div>
+                                            }
+                                          </div>
+                                          <div>
+                                            <label
+                                              for="category"
+                                              class="block text-sm font-medium text-gray-700 mb-1"
+                                              >Catégorie <span class="text-red-500">*</span></label
+                                              >
+                                              <select
+                                                id="category"
+                                                formControlName="category"
+                                                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                >
+                                                <option value="" disabled>Sélectionnez une catégorie</option>
+                                                @for (category of categories; track category) {
+                                                  <option [value]="category">
+                                                    {{ category }}
+                                                  </option>
+                                                }
+                                              </select>
+                                              @if (
+                                                reportForm.get('category')?.invalid &&
+                                                (reportForm.get('category')?.dirty ||
+                                                reportForm.get('category')?.touched)
+                                                ) {
+                                                <div
+                                                  class="text-red-500 text-sm mt-1"
+                                                  >
+                                                  La catégorie est requise.
+                                                </div>
+                                              }
+                                            </div>
+                                          </div>
 
-      <!-- Boutons d'action -->
-      <div class="flex justify-end space-x-4 mt-6">
-        <button
-          type="button"
-          (click)="onCancel()"
-          class="bg-gray-400 hover:bg-gray-500 text-white font-semibold py-2 px-4 rounded-md shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-opacity-75"
-        >
-          Annuler
-        </button>
-        <button
-          type="submit"
-          [disabled]="reportForm.invalid"
-          class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {{ isEditMode ? "Mettre à jour le Rapport" : "Ajouter le Rapport" }}
-        </button>
-      </div>
-    </form>
-  </div>
-</div>
+                                          <!-- Boutons d'action -->
+                                          <div class="flex justify-end space-x-4 mt-6">
+                                            <button
+                                              type="button"
+                                              (click)="onCancel()"
+                                              class="bg-gray-400 hover:bg-gray-500 text-white font-semibold py-2 px-4 rounded-md shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-opacity-75"
+                                              >
+                                              Annuler
+                                            </button>
+                                            <button
+                                              type="submit"
+                                              [disabled]="reportForm.invalid"
+                                              class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 disabled:opacity-50 disabled:cursor-not-allowed"
+                                              >
+                                              {{ isEditMode ? "Mettre à jour le Rapport" : "Ajouter le Rapport" }}
+                                            </button>
+                                          </div>
+                                        </form>
+                                      </div>
+                                    </div>

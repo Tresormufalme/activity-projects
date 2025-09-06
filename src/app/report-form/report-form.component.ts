@@ -8,17 +8,13 @@ import { Report } from '../models/report.model';
 import { take } from 'rxjs/operators';
 import { Timestamp } from 'firebase/firestore'; // Importation pour le type Timestamp
 // import { CustomModalComponent } from '../custom-modal/custom-modal.component'; // Importation de la modale personnalisée
-import { CommonModule } from '@angular/common'; // Pour les directives Angular (ngIf, ngFor)
+// Pour les directives Angular (ngIf, ngFor)
 import { ReactiveFormsModule } from '@angular/forms'; // Pour les formulaires réactifs
 
 @Component({
   selector: 'app-report-form',
   standalone: true, // Marque ce composant comme autonome
-  imports: [
-    CommonModule,
-    ReactiveFormsModule, // Nécessaire pour les formulaires réactifs
-    // CustomModalComponent, // Importe le composant de modale
-  ],
+  imports: [ReactiveFormsModule],
   templateUrl: './report-form.component.html',
   styleUrls: ['./report-form.component.css'], // Décommenté si vous avez des styles spécifiques
 })
@@ -112,12 +108,16 @@ export class ReportFormComponent implements OnInit {
         next: (report) => {
           if (report) {
             // Assurez-vous que la date est un objet Date avant de la formater
-            // const dateValue = report.date instanceof Timestamp ? report.date.toDate() : report.date;
-            // const formattedDate = dateValue.toISOString().substring(0, 10); // Formatte en YYYY-MM-DD
+            const dateValue =
+              report.date instanceof Timestamp
+                ? report.date.toDate()
+                : report.date;
+            // const formattedDate = dateValue().substring(0, 10); // Formatte en YYYY-MM-DD
 
             this.reportForm.patchValue({
               activityType: report.typeActivite,
               // date: formattedDate,
+              date: report.date,
               location: report.lieu,
               description: report.description,
               maleParticipants: report.participants.hommes || 0,
@@ -188,7 +188,7 @@ export class ReportFormComponent implements OnInit {
       // Construit l'objet Report à partir des valeurs du formulaire
       reportToSave = {
         typeActivite: formValues.activityType,
-        date: new Date(formValues.date), // Convertit la chaîne de date en objet Date
+        date: formValues.date, // Convertit la chaîne de date en objet Date
         lieu: formValues.location,
         region: formValues.region,
         category: formValues.category, // Assurez-vous que cette propriété est dans votre Report model
@@ -226,7 +226,7 @@ export class ReportFormComponent implements OnInit {
           this.reportForm.reset({
             // Réinitialise le formulaire après ajout
             activityType: '',
-            // date: '',
+            date: '',
             location: '',
             description: '',
             maleParticipants: 0,
